@@ -1,4 +1,7 @@
 {
   "token": "",
-  "guild": ""
+  "guild": "",
+  "rcon_ip": "",
+  "rcon_port": "",
+  "rcon_pw": ""
 }

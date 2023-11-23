@@ -8,6 +8,17 @@ with open("config.json", 'r') as f:
 
 guild = discord.Object(id=config["guild"])
 
+def valid_command(com):
+    command = com
+    if command[0] == "/":
+        command = command[1:]
+    try:
+        mc = mecha.Mecha()
+        mc.parse(command)
+        return True, ""
+    except Exception as e:
+        return False, e
+
 class MyClient(discord.Client):
 
     def __init__(self, intents):
@@ -26,7 +37,6 @@ class MyClient(discord.Client):
 
 
 intents = discord.Intents.default()
-
 client = MyClient(intents=intents)
 
 
@@ -39,13 +49,12 @@ async def help(interaction: discord.Interaction):
 
 @tree.command(name="parse", description="parses a minecraft command", guild=guild)
 async def parse(interaction: discord.Interaction, command: str):
-    try:
-        mc = mecha.Mecha()
-        mc.parse(command)
-        await interaction.response.send_message("command parsed")
-    except Exception as e:
-        await interaction.response.send_message(e)
 
+    valid, e = valid_command(command)
+    if valid:
+        await interaction.response.send_message("Command: \"" + command + "\" is valid")
+    else:
+        await interaction.response.send_message("Command: \"" + command + "\" is invalid, Error: " + str(e))
 
 
 
